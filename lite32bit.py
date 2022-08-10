@@ -4,7 +4,7 @@ import chipwhisperer as cw
 
 class Lite32bit:
     def __init__(self):
-        self.scope = cw.scope(name='Lite')
+        self.scope = cw.scope()
         self.scope.default_setup()
         target_type = self.get_target_type()
         self.target = cw.target(self.scope, target_type)
@@ -35,6 +35,9 @@ class Lite32bit:
         for i, feature in enumerate(self.scope.feature_list(), 1):
             print('    %02d: %s' %(i, feature))
     
+    def get_target_info(self):
+        print('target: %s' %self.target)
+    
     def setup_scope(self):
         self.scope.glitch.trigger_src = 'continuous'
         self.scope.glitch.clk_src = 'clkgen'
@@ -52,10 +55,30 @@ class Lite32bit:
         print(self.scope.io)
 
     def reset_target(self):
-        self.scope.io.nrst = 0
-        time.sleep(0.2) # 0.2sec
+        self.scope.io.nrst = 'low'
+        time.sleep(0.05) # 0.2sec
         self.scope.io.nrst = 'high_z'
-        time.sleep(0.2)
+        time.sleep(0.05)
+
+    def program_target(self):
+        #fw_path = 'simpleserial-glitch-CWLITEARM.hex'
+        fw_path = 'stm32f3.hex'
+        prog = cw.programmers.STM32FProgrammer
+        time.sleep(0.05)
+        
+        self.scope.default_setup()
+        self.reset_target()
+        #self.scope.adc.clk_freq = 20000000
+        #self.scope.io.pdic = 'low'
+        cw.program_target(self.scope, prog, fw_path)
+
+    def reboot_flush(self):            
+        self.scope.io.nrst = False
+        time.sleep(0.05)
+        self.scope.io.nrst = 'high_z'
+        time.sleep(0.05)
+        #Flush garbage too
+        self.target.flush()
 
     def shutdown(self):
         print('***Shutdown***')
