@@ -5,10 +5,8 @@ def main():
     lite.target.baud = 115200
     lite.get_scope_info()
     lite.get_target_info()
-    #lite.setup_scope()
     lite.get_scope_setup()
-    #lite.test_glitch()
-    #lite.program_target()
+    lite.program_target()
     lite.reboot_flush()
     #lite.shutdown()
     print('loop')
