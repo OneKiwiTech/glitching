@@ -6,12 +6,9 @@ def main():
     lite.get_scope_info()
     lite.get_target_info()
     lite.get_scope_setup()
-    lite.program_target()
     lite.reboot_flush()
-    #lite.shutdown()
     print('loop')
     while(True):
-        #pw = bytearray([0x00]*5)
         pw = bytearray([0x74, 0x6F, 0x75, 0x63, 0x68]) # correct password ASCII representation
         lite.target.simpleserial_write('p', pw)
 

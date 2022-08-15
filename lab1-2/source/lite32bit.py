@@ -61,15 +61,12 @@ class Lite32bit:
         time.sleep(0.05)
 
     def program_target(self):
-        #fw_path = 'simpleserial-glitch-CWLITEARM.hex'
         fw_path = 'stm32f3.hex'
         prog = cw.programmers.STM32FProgrammer
         time.sleep(0.05)
         
         self.scope.default_setup()
         self.reset_target()
-        #self.scope.adc.clk_freq = 20000000
-        #self.scope.io.pdic = 'low'
         cw.program_target(self.scope, prog, fw_path)
 
     def reboot_flush(self):            
@@ -81,12 +78,11 @@ class Lite32bit:
         self.target.flush()
 
     def shutdown(self):
-        print('***Shutdown***')
+        print('Shutdown')
         # disables glitch and glitch outputs
         self.scope.glitch_disable()
         self.scope.dis()
         self.target.dis()
-        exit()
 
     def test_glitch(self):
         for repeat in numpy.arange(1, 3000, 1):
